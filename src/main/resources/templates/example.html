@@ -15,9 +15,6 @@
     <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
     <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
-            crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -66,7 +63,25 @@
         }]
     });
 
-    setInterval(randomValue, 2000);
+    setInterval(getValue, 2000);
+
+    function getValue() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'api/v1/sensor/last');
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                var value =  xhr.responseText;
+                chart.arrows[0].setValue(value);
+                chart.axes[0].setTopText(value + " %");
+                // adjust darker band to new value
+                chart.axes[0].bands[1].setEndValue(value);
+            }
+            else {
+                alert('Request failed.  Returned status of ' + xhr.status);
+            }
+        };
+        xhr.send();
+    }
 
     // set random value
     function randomValue() {
