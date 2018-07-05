@@ -70,7 +70,7 @@
         xhr.open('GET', 'api/v1/sensor/last');
         xhr.onload = function() {
             if (xhr.status === 200) {
-                var value =  xhr.responseText;
+                var value =  Math.round(xhr.responseText);
                 chart.arrows[0].setValue(value);
                 chart.axes[0].setTopText(value + " %");
                 // adjust darker band to new value
